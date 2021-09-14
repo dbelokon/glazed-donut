@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "glazed-donut": {
-      "commandName": "Project",
-      "commandLineArgs": "--o"
-    }
-  }
-}
