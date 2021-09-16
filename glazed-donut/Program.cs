@@ -25,6 +25,9 @@ namespace glazed_donut
 
             [Option('i', "input", HelpText = "Accepts a path to a single file or a directory to generate the static site files.")]
             public string Input { get; set; }
+
+            [Option('o', "output", HelpText = "Accepts a path to the folder where the generated HTML files will be stored.", Default = "./dist")]
+            public string OutputDirectory { get; set; }
         }
 
         static void Main(string[] args)
@@ -32,6 +35,7 @@ namespace glazed_donut
             var result = parser.ParseArguments<Options>(args);
             
             string inputArgument = null;
+            string outputDirectory = null;
 
             // TODO: Cover WithNotParsed branch
             result.WithParsed(o => 
@@ -43,15 +47,18 @@ namespace glazed_donut
                 }
                 else if (o.Help)
                 {
-                    Console.WriteLine("Command              Definition                                                          Usage");
-                    Console.WriteLine("-v or --version      Displays the version of the software.                               type -v or --version");
-                    Console.WriteLine("-h or --help         Displays this helpful message.                                      type -h or --help");
-                    Console.WriteLine("-i or --input        Accepts a text file or a directory name to convert into HTML.       type -i or --input and then either a folder name or a text file name next to it.");
+                    Console.WriteLine("Command              Definition");
+                    Console.WriteLine("-v or --version      Displays the version of the software.");
+                    Console.WriteLine("-h or --help         Displays this helpful message.");
+                    Console.WriteLine("-i or --input        Specifies the file name or folder name that it should use to convert from.");
+                    Console.WriteLine("-o or --output       Specifies the folder name that contains the generated HTML files. By default, './dist' will be used.");
                     Environment.Exit(0);
                 }
                 else if (!string.IsNullOrWhiteSpace(o.Input))
                 {
                     inputArgument = o.Input;
+                    outputDirectory = o.OutputDirectory;
+
                 }
             }).WithNotParsed(err => { });
 
@@ -90,11 +97,11 @@ namespace glazed_donut
             
             if (attr.Value.HasFlag(FileAttributes.Directory))
             {
-                mainDirectoryCase(inputArgument);
+                mainDirectoryCase(inputArgument, outputDirectory);
             }
             else
             {
-                mainSingleFileCase(inputArgument);
+                mainSingleFileCase(inputArgument, outputDirectory);
             }
         }
 
@@ -103,7 +110,7 @@ namespace glazed_donut
             return fileName.EndsWith(".txt");
         }
 
-        static void mainDirectoryCase(string directoryName)
+        static void mainDirectoryCase(string directoryName, string outputDirectory)
         {
 
             if (!Directory.Exists(directoryName))
@@ -130,7 +137,24 @@ namespace glazed_donut
                 Environment.Exit(1);
             }
 
-            DirectoryInfo dirInfo = CreateDirectory("dist");
+            DirectoryInfo dirInfo = null;
+
+            try
+            {
+                dirInfo = CreateDirectory(outputDirectory);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"The directory '{outputDirectory}' cannot be accessed, due to lack of reading permission. Try using another directory.");
+                Environment.Exit(1);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"The directory '{outputDirectory}' cannot be accessed, due to an unknown error. See details below.");
+                Console.WriteLine(e.Message);
+                Environment.Exit(1);
+            }
+            
 
             foreach (string fileName in fileNames)
             {
@@ -164,7 +188,7 @@ namespace glazed_donut
             }
         }
 
-        static void mainSingleFileCase(string fileName)
+        static void mainSingleFileCase(string fileName, string outputDirectory)
         {
             FileStream openedFile = null;
 
@@ -208,7 +232,24 @@ namespace glazed_donut
 
             string htmlText = GenerateHtmlPage(paragraphs);
 
-            DirectoryInfo dirInfo = CreateDirectory("dist");
+            DirectoryInfo dirInfo = null;
+
+            try
+            {
+                dirInfo = CreateDirectory(outputDirectory);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"The directory '{outputDirectory}' cannot be accessed, due to lack of reading permission. Try using another directory.");
+                Environment.Exit(1);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"The directory '{outputDirectory}' cannot be accessed, due to an unknown error. See details below.");
+                Console.WriteLine(e.Message);
+                Environment.Exit(1);
+            }
+
             InsertFileInDirectory(dirInfo, fileName, htmlText);
         }
 
@@ -216,7 +257,7 @@ namespace glazed_donut
         {
             string newFileName = Path.GetFileNameWithoutExtension(originalFileName) + ".html";
 
-            File.WriteAllText(Path.Combine(dirInfo.Name, newFileName), htmlText);
+            File.WriteAllText(Path.Combine(dirInfo.FullName, newFileName), htmlText);
         }
 
         private static DirectoryInfo CreateDirectory(string directoryName)
