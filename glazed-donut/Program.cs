@@ -2,32 +2,55 @@
 using System.Collections.Generic;
 using System.IO;
 using CommandLine;
+using CommandLine.Text;
 
 namespace glazed_donut
 {
     class Program
     {
         const string VERSION = "0.1";
+        static readonly string VERSION_STRING = $"Glazed Donut {VERSION}";
 
         static Parser parser = new Parser(with =>
         {
+            with.HelpWriter = null;
             with.AutoHelp = false;
             with.AutoVersion = false;
         });
 
         class Options
         {
-            [Option('v', "version", HelpText = "Displays the version of the program.")]
+            [Option('v', "version", HelpText = "Displays the version of the software.")]
             public bool Version { get; set; }
             
-            [Option('h', "help", HelpText = "Provides how to use the command with the options.")]
+            [Option('h', "help", HelpText = "Displays this helpful message.")]
             public bool Help { get; set; }
 
-            [Option('i', "input", HelpText = "Accepts a path to a single file or a directory to generate the static site files.")]
+            [Option('i', "input", HelpText = "Specifies the file name or folder name that it should use to convert from.")]
             public string Input { get; set; }
 
-            [Option('o', "output", HelpText = "Accepts a path to the folder where the generated HTML files will be stored.", Default = "./dist")]
+            [Option('o', "output", HelpText = "Specifies the folder name that contains the generated HTML files.", Default = "./dist")]
             public string OutputDirectory { get; set; }
+
+            [Option('s', "stylesheet", HelpText = "Accepts a URL to a CSS stylesheet to style the generated HTML files.")]
+            public string StylesheetURL { get; set; }
+        }
+
+        static void DisplayHelp<T>(ParserResult<T> result)
+        {
+            var helpText = HelpText.AutoBuild(result, h =>
+            {
+                h.AdditionalNewLineAfterOption = true;
+                h.Heading = VERSION_STRING;
+                h.Copyright = "Copyright (c) 2021 Diana B.";
+                return HelpText.DefaultParsingErrorsHandler(result, h);
+            }, e => e);
+            
+            helpText.AutoVersion = false;
+            helpText.AutoHelp = false;
+            helpText.AddOptions(result);
+
+            Console.WriteLine(helpText);
         }
 
         static void Main(string[] args)
@@ -36,31 +59,35 @@ namespace glazed_donut
             
             string inputArgument = null;
             string outputDirectory = null;
+            string stylesheetUrl = null;
 
-            // TODO: Cover WithNotParsed branch
             result.WithParsed(o => 
             { 
                 if (o.Version)
                 {                   
-                    Console.WriteLine($"Glazed Donut {VERSION}.");
+                    Console.WriteLine(VERSION_STRING);
                     Environment.Exit(0);
                 }
                 else if (o.Help)
                 {
-                    Console.WriteLine("Command              Definition");
-                    Console.WriteLine("-v or --version      Displays the version of the software.");
-                    Console.WriteLine("-h or --help         Displays this helpful message.");
-                    Console.WriteLine("-i or --input        Specifies the file name or folder name that it should use to convert from.");
-                    Console.WriteLine("-o or --output       Specifies the folder name that contains the generated HTML files. By default, './dist' will be used.");
+                    DisplayHelp(result);
                     Environment.Exit(0);
                 }
                 else if (!string.IsNullOrWhiteSpace(o.Input))
                 {
                     inputArgument = o.Input;
                     outputDirectory = o.OutputDirectory;
-
+                    if (!string.IsNullOrWhiteSpace(o.StylesheetURL))
+                    {
+                        stylesheetUrl = o.StylesheetURL;
+                    }
                 }
-            }).WithNotParsed(err => { });
+            }).WithNotParsed(err => 
+            { 
+                DisplayHelp(result);
+                Environment.Exit(1);
+            });
+
 
             if (inputArgument == null)
             {
@@ -97,11 +124,11 @@ namespace glazed_donut
             
             if (attr.Value.HasFlag(FileAttributes.Directory))
             {
-                mainDirectoryCase(inputArgument, outputDirectory);
+                mainDirectoryCase(inputArgument, outputDirectory, stylesheetUrl);
             }
             else
             {
-                mainSingleFileCase(inputArgument, outputDirectory);
+                mainSingleFileCase(inputArgument, outputDirectory, stylesheetUrl);
             }
         }
 
@@ -110,7 +137,7 @@ namespace glazed_donut
             return fileName.EndsWith(".txt");
         }
 
-        static void mainDirectoryCase(string directoryName, string outputDirectory)
+        static void mainDirectoryCase(string directoryName, string outputDirectory, string stylesheetURL)
         {
 
             if (!Directory.Exists(directoryName))
@@ -183,12 +210,12 @@ namespace glazed_donut
                 }
 
                 List<string> paragraphs = ExtractParagraphs(openedFile);
-                string htmlText = GenerateHtmlPage(paragraphs);
+                string htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
                 InsertFileInDirectory(dirInfo, fileName, htmlText);
             }
         }
 
-        static void mainSingleFileCase(string fileName, string outputDirectory)
+        static void mainSingleFileCase(string fileName, string outputDirectory, string stylesheetURL)
         {
             FileStream openedFile = null;
 
@@ -230,7 +257,7 @@ namespace glazed_donut
             List<string> paragraphs = ExtractParagraphs(openedFile);
 
 
-            string htmlText = GenerateHtmlPage(paragraphs);
+            string htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
 
             DirectoryInfo dirInfo = null;
 
@@ -271,7 +298,7 @@ namespace glazed_donut
             return dirInfo;
         }
 
-        private static string GenerateHtmlPage(List<string> paragraphs)
+        private static string GenerateHtmlPage(List<string> paragraphs, string stylesheetURL)
         {
             string htmlBody = "";
 
@@ -285,6 +312,7 @@ namespace glazed_donut
  <head>
   <meta charset=""utf-8"">
   <title>Filename</title>
+  {(string.IsNullOrWhiteSpace(stylesheetURL) ? "" : $"<link rel=\"stylesheet\" href=\"{stylesheetURL}\">")}
   <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
  </head>
  <body>
@@ -293,7 +321,6 @@ namespace glazed_donut
  </html>";
             return htmlText;
         }
-
         private static List<string> ExtractParagraphs(FileStream openedFile)
         {
             StreamReader fileReader = new StreamReader(openedFile);
