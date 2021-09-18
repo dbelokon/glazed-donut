@@ -304,7 +304,7 @@ namespace glazed_donut
 
             foreach (var p in paragraphs)
             {
-                htmlBody += $"<p>{p.Replace("\n", "<br/>")}</p>\n";
+                htmlBody += $"<p>{p.Replace("\n", " ")}</p>\n";
             }
 
             string htmlText = $@"<!doctype html>
