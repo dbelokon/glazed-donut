@@ -1,13 +1,14 @@
 # Glazed Donut
 
-Glazed Donut is a CLI Static Site Generator that generates full static HTML website given a text file, or a directory that contains multiple text files.
+Glazed Donut is a CLI Static Site Generator that generates a full static HTML website given a text file, or a directory that contains multiple text files.
 
 ## Features
-* To be added
+* Supports CSS Stylesheets: allows you to style your website however you want, you just need to specify a URL to the CSS stylesheets.
+* Destination Folder: you can choose a folder where the HTML files will be stored in. 
 
 ## Installation
-1. Create a .NET Core Console Application inn your IDE.
-2. Make sure that you choose a correct version for .NET Core, which is 3.1. 
+1. Create a .NET Core Console Application in your IDE.
+2. Make sure that you choose the correct version for .NET Core, which is 3.1. 
 3. In the terminal, please enter this command to clone the repository:
 
        git clone <link to this repo>
@@ -27,12 +28,14 @@ To convert your .txt files into .html files, the following commands should be us
 ### Other Commands That Can Be Utilized
 You can also use the commands listed below when using this software:
 
-|   Command   |                               Description                                |
-| ----------  | ------------------------------------------------------------------------ |
-|-h, --help   |displays a list of supported commands and instructions on how to use them.|
-|-v, --version|displays the name and the version of the software.                        |
+|     Command    |                               Description                                   |
+| -------------- | --------------------------------------------------------------------------- |
+|-h, --help      |displays a list of supported commands and instructions on how to use them.   |
+|-v, --version   |displays the name and the version of the software.                           |
+|-s, --stylesheet|allows to specify a URL to a CSS stylesheet to style the generated HTML files.|
+|-o, --output    |let's specify a destination folder for the generated HTML files. By default, they will be placed in the dist folder.|
 
-## Examples
+## Example 
 
 In this scenario, assume that you have a file called **"hello.txt"** and you want to convert it into **"hello.html"**.
 
@@ -40,7 +43,7 @@ Here is what the hello.txt looks like before:
 
     Hello! 
     
-    Welcome to my static welsite!
+    Welcome to my static website!
    
     blah blah blah
     blah blah blah
@@ -55,9 +58,9 @@ or
 
     --input <path to the hello.txt file>
 
-This will create a dict folder, where the converted text file will be placed.
+This will create a dist folder, where the converted text file will be placed.
 
-When you open dist/hello.html, you will be seeing the following:
+When you open dist/hello.html, you will see the following:
 
 ```html
     <!doctype html>
@@ -72,7 +75,7 @@ When you open dist/hello.html, you will be seeing the following:
     <body>
         <p>Hello!</p>
     
-        <p>Welcome to my static welsite!</p>
+        <p>Welcome to my static website!</p>
    
         <p>blah blah blah<br/>
         blah blah blah</p>
