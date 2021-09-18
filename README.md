@@ -5,6 +5,11 @@ Glazed Donut is a CLI Static Site Generator that generates a full static HTML we
 ## Features
 * Supports CSS Stylesheets: allows you to style your website however you want, you just need to specify a URL to the CSS stylesheets.
 * Destination Folder: you can choose a folder where the HTML files will be stored in. 
+* Accepts a text file that will be converted to a static HTML page.
+* Can convert multiple text files into HTML files at once if you provide a path to a folder with text files that you want to use.
+* You can check program's version by typing -v or --version in the terminal.
+* Displays a help message with the command usage instructions if you type -h or --help.
+
 
 ## Installation
 1. Create a .NET Core Console Application in your IDE.
