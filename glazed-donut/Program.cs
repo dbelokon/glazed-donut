@@ -1,4 +1,4 @@
-﻿dotnusing System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using CommandLine;
@@ -349,7 +349,7 @@ namespace glazed_donut
             {
                 if (isHeading(p))
                 {
-                    htmlBody += $"<h1>{heading.Replace("\n", " ").Replace("#", "")}</h1>\n";
+                    htmlBody += $"<h1>{p.Replace("\n", " ").Replace("#", "")}</h1>\n";
                 }
                 else
                 {
