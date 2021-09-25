@@ -132,9 +132,18 @@ namespace glazed_donut
             }
         }
 
-        static bool IsFileNameValid(string fileName)
+        
+        static bool IsFileNameValid
+            (string fileName)
         {
-            return fileName.EndsWith(".txt");
+            //only process file if the file type is text or markdown
+            return fileName.EndsWith(".txt") || fileName.EndsWith(".md");
+        }
+
+        static bool isMarkDown
+            (string fileName)
+        {
+            return fileName.EndsWith(".md");
         }
 
         static void mainDirectoryCase(string directoryName, string outputDirectory, string stylesheetURL)
@@ -257,7 +266,17 @@ namespace glazed_donut
             List<string> paragraphs = ExtractParagraphs(openedFile);
 
 
-            string htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
+            string htmlText;
+
+            //check the file type
+            if (isMarkDown(fileName))
+            {
+                htmlText = GenerateHtmlPageForMarkdown(paragraphs, stylesheetURL); 
+            }
+            else
+            {
+                htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
+            }
 
             DirectoryInfo dirInfo = null;
 
@@ -321,6 +340,38 @@ namespace glazed_donut
  </html>";
             return htmlText;
         }
+
+        private static string GenerateHtmlPageForMarkdown(List<string> paragraphs, string stylesheetURL)
+        {
+            string htmlBody = "";
+
+            foreach (var p in paragraphs)
+            {
+                if (isHeading(p))
+                {
+                    htmlBody += $"<h1>{p.Replace("\n", " ").Replace("#", "")}</h1>\n";
+                }
+                else
+                {
+                    htmlBody += $"<p>{p.Replace("\n", " ")}</p>\n";
+                }
+            }
+
+            string htmlText = $@"<!doctype html>
+<html lang=""en"">
+ <head>
+  <meta charset=""utf-8"">
+  <title>Filename</title>
+  {(string.IsNullOrWhiteSpace(stylesheetURL) ? "" : $"<link rel=\"stylesheet\" href=\"{stylesheetURL}\">")}
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+ </head>
+ <body>
+    {htmlBody}
+ </body>
+ </html>";
+            return htmlText;
+        }
+
         private static List<string> ExtractParagraphs(FileStream openedFile)
         {
             StreamReader fileReader = new StreamReader(openedFile);
@@ -356,6 +407,13 @@ namespace glazed_donut
             }
 
             return paragraphs;
+        }
+
+
+        //check the line if it is heading
+        private static bool isHeading(string line)
+        {
+            return line.StartsWith("# ");
         }
     }
 }
