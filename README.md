@@ -9,6 +9,7 @@ Glazed Donut is a CLI Static Site Generator that generates a full static HTML we
 * Can convert multiple text files into HTML files at once if you provide a path to a folder with text files that you want to use.
 * You can check program's version by typing -v or --version in the terminal.
 * Displays a help message with the command usage instructions if you type -h or --help.
+* Accepts a markdown file and convert the '#' heading to <h1> tag in HTML page.
 
 
 ## Installation
@@ -22,7 +23,7 @@ NOTE: If you can't see any folders and files in the Solution Explorer, most like
 
 ## Usage
 
-To convert your .txt files into .html files, the following commands should be used:
+To convert your .txt or .md files into .html files, the following commands should be used:
 
     -i <path to a text file or directory with text files>
     
@@ -91,8 +92,49 @@ When you open dist/hello.html, you will see the following:
     </html>";
 ```
 
+Second scenario, assume that you have a file called **"Sample.md"** and you want to convert it into **"Sample.html"**.
+
+Sample.md
+
+    # Heading 
+    
+    This is a sample markdown file.
+   
+      
+In the command line, type the following command: 
+
+    -i <path to the Sample.md file>
+
+or 
+
+    --input <path to the Sample.md file>
+
+This will create a dist folder, if not already exist
+
+In Sample.html file :
+
+```html
+    <!doctype html>
+    <html lang=""en"">
+    
+    <head>
+        <meta charset=""utf-8"">
+        <title>Filename</title>
+        <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+    </head>
+    
+    <body>
+        <h1>Heading!</h1>
+    
+        <p>This is a sample markdown file.</p>
+   
+    </body>
+    
+    </html>";
+```
+
 ## Author
 
 Diana Belokon ([@belokond](https://dev.to/belokond))
-
+Irene Park ([@irenejoeunpark], contributed in md feature)
 
