@@ -34,6 +34,9 @@ namespace glazed_donut
 
             [Option('s', "stylesheet", HelpText = "Accepts a URL to a CSS stylesheet to style the generated HTML files.")]
             public string StylesheetURL { get; set; }
+
+            [Option('l', "lang", HelpText = "Acepts a language tag to mark the HTML document.", Default = "en-CA")]
+            public string Lang { get; set; }
         }
 
         static void DisplayHelp<T>(ParserResult<T> result)
@@ -60,6 +63,7 @@ namespace glazed_donut
             string inputArgument = null;
             string outputDirectory = null;
             string stylesheetUrl = null;
+            string language = null;
 
             result.WithParsed(o => 
             { 
@@ -77,6 +81,7 @@ namespace glazed_donut
                 {
                     inputArgument = o.Input;
                     outputDirectory = o.OutputDirectory;
+                    language = o.Lang;
                     if (!string.IsNullOrWhiteSpace(o.StylesheetURL))
                     {
                         stylesheetUrl = o.StylesheetURL;
@@ -124,11 +129,11 @@ namespace glazed_donut
             
             if (attr.Value.HasFlag(FileAttributes.Directory))
             {
-                mainDirectoryCase(inputArgument, outputDirectory, stylesheetUrl);
+                mainDirectoryCase(inputArgument, outputDirectory, stylesheetUrl, language);
             }
             else
             {
-                mainSingleFileCase(inputArgument, outputDirectory, stylesheetUrl);
+                mainSingleFileCase(inputArgument, outputDirectory, stylesheetUrl, language);
             }
         }
 
@@ -146,7 +151,7 @@ namespace glazed_donut
             return fileName.EndsWith(".md");
         }
 
-        static void mainDirectoryCase(string directoryName, string outputDirectory, string stylesheetURL)
+        static void mainDirectoryCase(string directoryName, string outputDirectory, string stylesheetURL, string language)
         {
 
             if (!Directory.Exists(directoryName))
@@ -219,12 +224,12 @@ namespace glazed_donut
                 }
 
                 List<string> paragraphs = ExtractParagraphs(openedFile);
-                string htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
+                string htmlText = GenerateHtmlPage(paragraphs, stylesheetURL, language);
                 InsertFileInDirectory(dirInfo, fileName, htmlText);
             }
         }
 
-        static void mainSingleFileCase(string fileName, string outputDirectory, string stylesheetURL)
+        static void mainSingleFileCase(string fileName, string outputDirectory, string stylesheetURL, string language)
         {
             FileStream openedFile = null;
 
@@ -275,7 +280,7 @@ namespace glazed_donut
             }
             else
             {
-                htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
+                htmlText = GenerateHtmlPage(paragraphs, stylesheetURL, language);
             }
 
             DirectoryInfo dirInfo = null;
@@ -317,7 +322,7 @@ namespace glazed_donut
             return dirInfo;
         }
 
-        private static string GenerateHtmlPage(List<string> paragraphs, string stylesheetURL)
+        private static string GenerateHtmlPage(List<string> paragraphs, string stylesheetURL, string language)
         {
             string htmlBody = "";
 
@@ -327,7 +332,7 @@ namespace glazed_donut
             }
 
             string htmlText = $@"<!doctype html>
-<html lang=""en"">
+<html lang=""{($"{language}")}"">
  <head>
   <meta charset=""utf-8"">
   <title>Filename</title>
