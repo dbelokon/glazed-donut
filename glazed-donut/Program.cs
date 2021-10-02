@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using CommandLine;
 using CommandLine.Text;
 
@@ -263,7 +264,7 @@ namespace glazed_donut
                 Console.WriteLine($"The file {fileName} does not contain any data. The output file might be empty.");
             }
 
-            List<string> paragraphs = ExtractParagraphs(openedFile);
+            
 
 
             string htmlText;
@@ -271,10 +272,12 @@ namespace glazed_donut
             //check the file type
             if (isMarkDown(fileName))
             {
+                List<string> paragraphs = ExtractParagraphsForMarkdown(openedFile);
                 htmlText = GenerateHtmlPageForMarkdown(paragraphs, stylesheetURL); 
             }
             else
             {
+                List<string> paragraphs = ExtractParagraphs(openedFile);
                 htmlText = GenerateHtmlPage(paragraphs, stylesheetURL);
             }
 
@@ -347,9 +350,13 @@ namespace glazed_donut
 
             foreach (var p in paragraphs)
             {
-                if (isHeading(p))
+                if (IsHeading(p))
                 {
                     htmlBody += $"<h1>{p.Replace("\n", " ").Replace("#", "")}</h1>\n";
+                }
+                else if (IsHorizontalLine(p))
+                {
+                    htmlBody += $"<hr>";
                 }
                 else
                 {
@@ -409,11 +416,61 @@ namespace glazed_donut
             return paragraphs;
         }
 
+        private static List<string> ExtractParagraphsForMarkdown(FileStream openedFile)
+        {
+            StreamReader fileReader = new StreamReader(openedFile);
+
+            string line;
+            string paragraph = "";
+            List<string> paragraphs = new List<string>();
+
+            while ((line = fileReader.ReadLine()) != null)
+            {
+                if (IsHorizontalLine(line))
+                {
+                    if (!string.IsNullOrWhiteSpace(paragraph))
+                    {
+                        paragraphs.Add(paragraph);
+                    }
+                    paragraphs.Add(line);
+                    paragraph = "";
+                }
+                else if (!string.IsNullOrWhiteSpace(line))
+                {
+                    if (string.IsNullOrWhiteSpace(paragraph))
+                    {
+                        paragraph += line;
+                    }
+                    else
+                    {
+                        paragraph += "\n" + line;
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(paragraph))
+                {
+                    paragraphs.Add(paragraph);
+                    paragraph = "";
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(paragraph))
+            {
+                paragraphs.Add(paragraph);
+            }
+
+            return paragraphs;
+        }
 
         //check the line if it is heading
-        private static bool isHeading(string line)
+        private static bool IsHeading(string line)
         {
             return line.StartsWith("# ");
+        }
+
+        private static bool IsHorizontalLine(string line)
+        {
+            Regex regex = new Regex(@"^\s*---+\s*$");
+            return regex.Match(line).Success;
         }
     }
 }
