@@ -9,6 +9,7 @@ Glazed Donut is a CLI Static Site Generator that generates a full static HTML we
 * Can convert multiple text files into HTML files at once if you provide a path to a folder with text files that you want to use.
 * You can check program's version by typing -v or --version in the terminal.
 * Displays a help message with the command usage instructions if you type -h or --help.
+* Supports horizontal rule for Markdown files.
 
 
 ## Installation
