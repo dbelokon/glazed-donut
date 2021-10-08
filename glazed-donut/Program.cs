@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -9,15 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace glazed_donut
 {
-    class Test
-    {
-        string input;
-        string output;
-        string stylesheet;
-        string lang;
-    }
-
-
+    
     class Program
     {
         const string VERSION = "0.1";
