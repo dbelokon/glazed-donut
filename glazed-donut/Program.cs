@@ -1,12 +1,23 @@
 ﻿using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using CommandLine;
 using CommandLine.Text;
+using Newtonsoft.Json.Linq;
 
 namespace glazed_donut
 {
+    class Test
+    {
+        string input;
+        string output;
+        string stylesheet;
+        string lang;
+    }
+
+
     class Program
     {
         const string VERSION = "0.1";
@@ -21,11 +32,14 @@ namespace glazed_donut
 
         class Options
         {
+            [Option('c', "config", HelpText = "Supports --config for config.json.")]
+            public string OutputConfigDirectory { get; set; }
+
             [Option('v', "version", HelpText = "Displays the version of the software.")]
             public bool Version { get; set; }
             
             [Option('h', "help", HelpText = "Displays this helpful message.")]
-            public bool Help { get; set; }
+            public bool Help { get; set; } 
 
             [Option('i', "input", HelpText = "Specifies the file name or folder name that it should use to convert from.")]
             public string Input { get; set; }
@@ -59,17 +73,18 @@ namespace glazed_donut
 
         static void Main(string[] args)
         {
-            var result = parser.ParseArguments<Options>(args);
+            var result = parser.ParseArguments<Options>(args); 
             
             string inputArgument = null;
             string outputDirectory = null;
             string stylesheetUrl = null;
             string language = null;
+            string outputConfigDirectory = null;
 
             result.WithParsed(o => 
-            { 
+            {
                 if (o.Version)
-                {                   
+                {
                     Console.WriteLine(VERSION_STRING);
                     Environment.Exit(0);
                 }
@@ -78,7 +93,30 @@ namespace glazed_donut
                     DisplayHelp(result);
                     Environment.Exit(0);
                 }
-                else if (!string.IsNullOrWhiteSpace(o.Input))
+                else if (!string.IsNullOrEmpty(o.OutputConfigDirectory)) {
+                    // parse the JSON
+                    string myJsonString = File.ReadAllText(o.OutputConfigDirectory); 
+                    JObject jObject = JObject.Parse(myJsonString);
+                    foreach (KeyValuePair<string, JToken> keyValuePair in jObject)
+                    {
+                        switch (keyValuePair.Key) {
+                            case "input":
+                                o.Input = (string)keyValuePair.Value;
+                                break;
+                            case "output":
+                                o.OutputDirectory = (string)keyValuePair.Value;
+                                break;
+                            case "stylesheet":
+                                o.StylesheetURL = (string)keyValuePair.Value;
+                                break;
+                            case "lang":
+                                o.Lang = (string)keyValuePair.Value;
+                                break;
+                        }
+                    }
+
+                }
+                if (!string.IsNullOrWhiteSpace(o.Input))
                 {
                     inputArgument = o.Input;
                     outputDirectory = o.OutputDirectory;
@@ -143,7 +181,7 @@ namespace glazed_donut
             (string fileName)
         {
             //only process file if the file type is text or markdown
-            return fileName.EndsWith(".txt") || fileName.EndsWith(".md");
+            return fileName.EndsWith(".txt") || fileName.EndsWith(".md") || fileName.EndsWith(".json");
         }
 
         static bool isMarkDown
