@@ -42,6 +42,8 @@ You can also use the commands listed below when using this software:
 |-s, --stylesheet|allows to specify a URL to a CSS stylesheet to style the generated HTML files.|
 |-o, --output    |let's specify a destination folder for the generated HTML files. By default, they will be placed in the dist folder.|
 |-l, --lang      |accepts a language tag to mark the HTML document. By default, the lang attribute will be set to en-CA|
+|-c, --config    | indicates the path to a JSON config file.                                   |
+
 
 ## Example 
 
