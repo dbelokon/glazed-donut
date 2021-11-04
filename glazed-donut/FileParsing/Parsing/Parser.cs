@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace glazed_donut.FileParsing.Parsing
+namespace GlazedDonut.FileParsing.Parsing
 {
     public abstract class Parser
     {
@@ -25,8 +25,6 @@ namespace glazed_donut.FileParsing.Parsing
             this.lines = lines;
         }
 
-        public abstract string Parse();
-
         public static Parser GetParser(string fileName, FileStream stream)
         {
             if (IsFileRawTextFile(fileName))
@@ -40,6 +38,8 @@ namespace glazed_donut.FileParsing.Parsing
 
             return null;
         }
+
+        public abstract string Parse();
 
         private static bool IsFileRawTextFile(string fileName)
         {

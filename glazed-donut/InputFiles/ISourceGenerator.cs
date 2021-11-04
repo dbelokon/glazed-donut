@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace glazed_donut.InputFiles
+namespace GlazedDonut.InputFiles
 {
     public interface ISourceGenerator
     {

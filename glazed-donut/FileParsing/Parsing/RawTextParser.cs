@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace glazed_donut.FileParsing.Parsing
+namespace GlazedDonut.FileParsing.Parsing
 {
-    class RawTextParser : Parser
+    internal class RawTextParser : Parser
     {
-        public RawTextParser(FileStream stream) : base(stream) { }
+        public RawTextParser(FileStream stream)
+            : base(stream)
+        {
+        }
 
+        /// <inheritdoc/>
         public override string Parse()
         {
             IEnumerable<string> paragraphs = ExtractParagraphs();
@@ -17,7 +21,7 @@ namespace glazed_donut.FileParsing.Parsing
         private IEnumerable<string> ExtractParagraphs()
         {
             List<string> paragraphs = new List<string>();
-            string paragraph = "";
+            string paragraph = string.Empty;
 
             foreach (string line in lines)
             {
@@ -30,13 +34,12 @@ namespace glazed_donut.FileParsing.Parsing
                     else
                     {
                         paragraph += "\n" + line;
-
                     }
                 }
                 else if (!string.IsNullOrWhiteSpace(paragraph))
                 {
                     paragraphs.Add(paragraph);
-                    paragraph = "";
+                    paragraph = string.Empty;
                 }
             }
 
@@ -47,10 +50,10 @@ namespace glazed_donut.FileParsing.Parsing
 
             return paragraphs;
         }
-    
+
         private string ProduceHtmlString(IEnumerable<string> paragraphs)
         {
-            string htmlString = "";
+            string htmlString = string.Empty;
 
             foreach (var p in paragraphs)
             {
