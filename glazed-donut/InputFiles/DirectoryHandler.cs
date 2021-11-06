@@ -1,13 +1,14 @@
-﻿using glazed_donut.FileParsing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using GlazedDonut.FileParsing;
 
-namespace glazed_donut.InputFiles
+namespace GlazedDonut.InputFiles
 {
     public class DirectoryHandler : ISourceGenerator
     {
+        /// <inheritdoc/>
         public void Generate(string inputArgument, string outputDirectory, string stylesheetUrl, string language)
         {
             if (!Directory.Exists(inputArgument))
@@ -51,7 +52,6 @@ namespace glazed_donut.InputFiles
                 Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
-
 
             foreach (string fileName in fileNames)
             {

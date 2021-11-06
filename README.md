@@ -12,16 +12,6 @@ Glazed Donut is a CLI Static Site Generator that generates a full static HTML we
 * Allows to input a language tag for the lang attribute in the generated HTML file(s).
 * Supports horizontal rule for Markdown files.
 
-
-## Installation
-1. Create a .NET Core Console Application in your IDE.
-2. Make sure that you choose the correct version for .NET Core, which is 3.1. 
-3. In the terminal, please enter this command to clone the repository:
-
-       git clone <link to this repo>
-      
-NOTE: If you can't see any folders and files in the Solution Explorer, most likely you are not in the correct solution. Go to your file explorer and open the solution named glazed-donut.sln.
-
 ## Usage
 
 To convert your .txt files into .html files, the following commands should be used:

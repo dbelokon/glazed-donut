@@ -1,10 +1,10 @@
-﻿using glazed_donut.InputFiles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using GlazedDonut.InputFiles;
 
-namespace glazed_donut
+namespace GlazedDonut
 {
     public class StaticSiteGenerator
     {
@@ -12,7 +12,7 @@ namespace glazed_donut
         public static void Generate(string inputArgument, string outputDirectory, string stylesheetUrl, string language)
         {
             FileAttributes? attributes = GetFileAttributes(inputArgument);
-            
+
             if (!attributes.HasValue)
             {
                 return;
@@ -56,7 +56,7 @@ namespace glazed_donut
 
             return attr;
         }
-    
+
         private static ISourceGenerator ConstructGenerator(FileAttributes inputFileAttributes)
         {
             if (inputFileAttributes.HasFlag(FileAttributes.Directory))

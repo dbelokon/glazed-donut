@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace glazed_donut.FileParsing.Parsing
+namespace GlazedDonut.FileParsing.Parsing
 {
-    class MarkdownParser : Parser
+    internal class MarkdownParser : Parser
     {
-        public MarkdownParser(FileStream stream) : base(stream) { }
+        public MarkdownParser(FileStream stream)
+            : base(stream)
+        {
+        }
 
+        /// <inheritdoc/>
         public override string Parse()
         {
             IEnumerable<string> paragraphs = ExtractParagraphs();
@@ -18,7 +22,7 @@ namespace glazed_donut.FileParsing.Parsing
         private IEnumerable<string> ExtractParagraphs()
         {
             List<string> paragraphs = new List<string>();
-            string paragraph = "";            
+            string paragraph = string.Empty;
 
             foreach (string line in lines)
             {
@@ -28,8 +32,9 @@ namespace glazed_donut.FileParsing.Parsing
                     {
                         paragraphs.Add(paragraph);
                     }
+
                     paragraphs.Add(line);
-                    paragraph = "";
+                    paragraph = string.Empty;
                 }
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
@@ -45,7 +50,7 @@ namespace glazed_donut.FileParsing.Parsing
                 else if (!string.IsNullOrWhiteSpace(paragraph))
                 {
                     paragraphs.Add(paragraph);
-                    paragraph = "";
+                    paragraph = string.Empty;
                 }
             }
 
@@ -59,13 +64,13 @@ namespace glazed_donut.FileParsing.Parsing
 
         private string ProduceHtmlString(IEnumerable<string> paragraphs)
         {
-            string htmlString = "";
+            string htmlString = string.Empty;
 
             foreach (var p in paragraphs)
             {
                 if (IsHeading(p))
                 {
-                    htmlString += $"<h1>{p.Replace("\n", " ").Replace("#", "")}</h1>\n";
+                    htmlString += $"<h1>{p.Replace("\n", " ").Replace("#", string.Empty)}</h1>\n";
                 }
                 else if (IsHorizontalLine(p))
                 {

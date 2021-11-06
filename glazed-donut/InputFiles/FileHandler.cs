@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using glazed_donut.FileParsing;
+using GlazedDonut.FileParsing;
 
-namespace glazed_donut.InputFiles
+namespace GlazedDonut.InputFiles
 {
     public class FileHandler : ISourceGenerator
     {
+        /// <inheritdoc/>
         public void Generate(string inputArgument, string outputDirectory, string stylesheetUrl, string language)
         {
             InputFile file = InputFile.AccessInputFile(inputArgument, stylesheetUrl, language);

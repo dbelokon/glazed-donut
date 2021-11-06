@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using glazed_donut.FileParsing.Parsing;
+using GlazedDonut.FileParsing.Parsing;
 
-namespace glazed_donut.FileParsing
+namespace GlazedDonut.FileParsing
 {
-    class InputFile
+    internal class InputFile
     {
         private Parser parser;
-        public string FileName { get; }
-        public string PageName { get; }
-        public string StylesheetUrl { get; }
-        public string LanguageTag { get; }
 
         private InputFile(string fileName, string stylesheetUrl, string languageTag, Parser parser)
         {
@@ -23,25 +19,13 @@ namespace glazed_donut.FileParsing
             this.parser = parser;
         }
 
-        public string EmitHtmlPage()
-        {
-            string htmlBody = parser.Parse();
+        public string FileName { get; }
 
-            string htmlText = $@"<!doctype html>
-<html lang=""{$"{LanguageTag}"}"">
- <head>
-  <meta charset=""utf-8"">
-  <title>{PageName}</title>
-  {(string.IsNullOrWhiteSpace(StylesheetUrl) ? "" : $"<link rel=\"stylesheet\" href=\"{StylesheetUrl}\">")}
-  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
- </head>
- <body>
-    {htmlBody}
- </body>
- </html>";
+        public string PageName { get; }
 
-            return htmlText;
-        }
+        public string StylesheetUrl { get; }
+
+        public string LanguageTag { get; }
 
         public static InputFile AccessInputFile(string inputFileName, string stylesheetUrl, string languageTag)
         {
@@ -55,7 +39,7 @@ namespace glazed_donut.FileParsing
             try
             {
                 FileStream openedFile = File.Open(inputFileName, FileMode.Open);
-                
+
                 if (openedFile.Length == 0)
                 {
                     Console.WriteLine($"The file {inputFileName} does not contain any data. The output file might be empty.");
@@ -81,6 +65,26 @@ namespace glazed_donut.FileParsing
                 Console.WriteLine(e.Message);
                 return null;
             }
+        }
+
+        public string EmitHtmlPage()
+        {
+            string htmlBody = parser.Parse();
+
+            string htmlText = $@"<!doctype html>
+<html lang=""{$"{LanguageTag}"}"">
+ <head>
+  <meta charset=""utf-8"">
+  <title>{PageName}</title>
+  {(string.IsNullOrWhiteSpace(StylesheetUrl) ? string.Empty : $"<link rel=\"stylesheet\" href=\"{StylesheetUrl}\">")}
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+ </head>
+ <body>
+    {htmlBody}
+ </body>
+ </html>";
+
+            return htmlText;
         }
 
         private static bool IsFileNameValid(string fileName)
