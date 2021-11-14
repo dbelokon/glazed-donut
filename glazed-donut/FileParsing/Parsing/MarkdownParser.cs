@@ -7,7 +7,7 @@ namespace GlazedDonut.FileParsing.Parsing
 {
     internal class MarkdownParser : Parser
     {
-        public MarkdownParser(FileStream stream)
+        public MarkdownParser(Stream stream)
             : base(stream)
         {
         }

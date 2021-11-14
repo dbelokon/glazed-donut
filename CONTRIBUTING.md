@@ -56,3 +56,13 @@ at the root of the project. You may need to run it several times to fix all
 possible warnings, because sometimes `dotnet-format` cannot fix all issues
 in one sweep.
 easily run a linting check process right before committing. 
+
+## Unit Testing
+
+This repository is using [xUnit](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test) testing framework. 
+All the unit tests are located in glazed-donut.Tests solution folder. 
+
+To run unit tests, right click on the solution and select 'Run Tests'. 
+
+When writing tests, please cover all the possible positive and nagative scenarios you can think of. 
+Make sure all the tests are passed before you submit a PR. 

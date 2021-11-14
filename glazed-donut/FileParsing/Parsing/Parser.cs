@@ -9,7 +9,7 @@ namespace GlazedDonut.FileParsing.Parsing
     {
         protected IEnumerable<string> lines;
 
-        public Parser(FileStream stream)
+        public Parser(Stream stream)
         {
             var lines = new List<string>();
 
