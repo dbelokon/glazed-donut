@@ -70,7 +70,7 @@ namespace GlazedDonut.FileParsing.Parsing
             {
                 if (IsHeading(p))
                 {
-                    htmlString += $"<h1>{p.Replace("\n", " ").Replace("#", string.Empty)}</h1>\n";
+                    htmlString += $"<h1>{p.Replace("#", string.Empty).Trim()}</h1>\n";
                 }
                 else if (IsHorizontalLine(p))
                 {
