@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Sample.md = Sample.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glazed-donut.Tests", "glazed-donut.Tests\glazed-donut.Tests.csproj", "{29899B18-6C61-4C33-851B-AA05D9F0AA04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +23,16 @@ Global
 		{A9ABC840-0E3A-44CE-B7CB-CF748A9CD422}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9ABC840-0E3A-44CE-B7CB-CF748A9CD422}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9ABC840-0E3A-44CE-B7CB-CF748A9CD422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29899B18-6C61-4C33-851B-AA05D9F0AA04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29899B18-6C61-4C33-851B-AA05D9F0AA04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29899B18-6C61-4C33-851B-AA05D9F0AA04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29899B18-6C61-4C33-851B-AA05D9F0AA04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{29899B18-6C61-4C33-851B-AA05D9F0AA04} = {FED0E812-8778-4D3D-ACE2-1456911CEF15}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33133777-76B0-4548-8DE4-C725ED679588}

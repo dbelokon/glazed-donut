@@ -6,7 +6,7 @@ namespace GlazedDonut.FileParsing.Parsing
 {
     internal class RawTextParser : Parser
     {
-        public RawTextParser(FileStream stream)
+        public RawTextParser(Stream stream)
             : base(stream)
         {
         }
