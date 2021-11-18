@@ -74,7 +74,7 @@ namespace GlazedDonut.FileParsing.Parsing
                 }
                 else if (IsHorizontalLine(p))
                 {
-                    htmlString += $"<hr>";
+                    htmlString += $"<hr />";
                 }
                 else
                 {
