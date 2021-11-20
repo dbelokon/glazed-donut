@@ -49,5 +49,55 @@ namespace glazed_donut.Tests
                 new object[] { "# Markdown", "<h1>Markdown</h1>\n" },
                 new object[] { "---", "<hr>" }
             };
+
+        [Theory]
+        [InlineData("#")]
+        [InlineData("#\n")]
+        [InlineData("# ")]
+        [InlineData("# \n")]
+        public void ReturnEmptyHeaderElement_WhenHeaderTextIsEmpty(string input)
+        {
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            var parser = new MarkdownParser(stream);
+
+            var htmlString = parser.Parse();
+
+            Assert.Equal("<h1></h1>\n", htmlString);
+        }
+
+        [Theory]
+        [InlineData("# header #")]
+        [InlineData("# header #\n")]
+        [InlineData("# header ##")]
+        [InlineData("# header ##\n")]
+        public void ReturnNormalHeaderElement_WhenHeaderTextFollowedByHashtags(string input)
+        {
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            var parser = new MarkdownParser(stream);
+
+            var htmlString = parser.Parse();
+
+            Assert.Equal("<h1>header</h1>\n", htmlString);
+        }
+
+        [Theory, MemberData(nameof(HeaderTextWithImmediateHashtags))]
+        public void ReturnHeaderElementWithHashtags_WhenHeaderTextImmediatelyFollowedByHashtags(string input, string expectedHtmlString)
+        {
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+            var parser = new MarkdownParser(stream);
+
+            var htmlString = parser.Parse();
+
+            Assert.Equal(expectedHtmlString, htmlString);
+        }
+
+        public static IEnumerable<object[]> HeaderTextWithImmediateHashtags =>
+            new List<object[]>
+            {
+                new object[] { "# header#", "<h1>header#</h1>\n" },
+                new object[] { "# header#\n", "<h1>header#</h1>\n" },
+                new object[] { "# header##", "<h1>header##</h1>\n" },
+                new object[] { "# header##\n", "<h1>header##</h1>\n" }
+            };
     }
 }
