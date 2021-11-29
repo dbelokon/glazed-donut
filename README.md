@@ -12,6 +12,35 @@ Glazed Donut is a CLI Static Site Generator that generates a full static HTML we
 * Allows to input a language tag for the lang attribute in the generated HTML file(s).
 * Supports horizontal rule for Markdown files.
 
+## Installation
+
+Right now, I do not offer the program from a program registry. However, there are already pre-built binaries available for Windows and Linux!
+The download link for any of the binaries are found in the [latest release](https://github.com/dbelokon/glazed-donut/releases/latest).
+
+After installation, you will 
+
+### Requirements for installation
+
+For either platform:
+
+* [.NET Core Runtime, version 3.1](https://dotnet.microsoft.com/download/dotnet/3.1)
+
+If in Windows, then you will need to be running Windows 10, x64 arch.
+
+If in Linux, then you will need to be running Linux, x64 arch.
+
+### Windows Installation
+
+After you decompress the zip file with whatever decompression program, you will have the executable with the respective `dll`s. I suggest you keep all of the files in the same folder. After that, place that folder wherever you prefer, and copy the full path to the folder.
+
+For example, if you placed the program folder in `C:\Users\User\AppData\Local\`, then the full path might be `C:\Users\User\AppData\Local\glazed-donut-v1.0.0`. The last component might be different if you named the folder something else. You want to place that path as part of your `Path` variable. You can find out how to do that [here](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14)#to-add-a-path-to-the-path-environment-variable).
+
+### Linux Installation
+
+After you decompress the tar.gz file with whatever program, you will have the result folder, with the executable and the `dll` files inside. I suggest you keep all of the files in the same folder. After that, place that folder wherever you prefer, and make note of the full path to that folder.
+
+As with the Windows installation, you will need to append that new location to your Path variable, but you might need to modify your `.bash_profile` or `.bashrc` to run the command that appends that new path to the variable.
+
 ## Usage
 
 To convert your .txt files into .html files, the following commands should be used:
